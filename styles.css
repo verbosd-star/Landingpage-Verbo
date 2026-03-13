@@ -4,26 +4,24 @@
 
 /* ---------- CSS Variables ---------- */
 :root {
-  /* Brand: crimson red, black, white */
-  --color-primary: #A51C2E;
-  --color-primary-dark: #831624;
-  --color-primary-light: #fdf0f1;
-  --color-accent: #111111;
-  --color-text: #111111;
+  --color-primary: #6c3de8;
+  --color-primary-dark: #5528d4;
+  --color-primary-light: #f0eaff;
+  --color-accent: #ff6b35;
+  --color-text: #1a1a2e;
   --color-text-muted: #6b7280;
   --color-bg: #ffffff;
-  --color-bg-alt: #f5f5f5;
+  --color-bg-alt: #f8f7ff;
   --color-border: #e5e7eb;
   --color-white: #ffffff;
 
   --font-family: 'Inter', sans-serif;
-  --font-display: 'Montserrat', sans-serif;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
   --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
   --shadow-md: 0 4px 20px rgba(0,0,0,.10);
-  --shadow-lg: 0 10px 40px rgba(165,28,46,.20);
+  --shadow-lg: 0 10px 40px rgba(108,61,232,.18);
 
   --transition: .25s ease;
 }
@@ -46,10 +44,6 @@ body {
   background: var(--color-bg);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
 }
 
 a {
@@ -239,7 +233,7 @@ ul {
 .hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #111111 0%, #1e0508 55%, var(--color-primary) 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #9b59e0 100%);
   color: var(--color-white);
   padding-block: 7rem 6rem;
   text-align: center;
@@ -394,7 +388,7 @@ ul {
 /* Featured / popular card */
 .pricing-card--featured {
   border-color: var(--color-primary);
-  background: linear-gradient(160deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background: linear-gradient(160deg, var(--color-primary) 0%, #8b52f5 100%);
   color: var(--color-white);
   box-shadow: var(--shadow-lg);
   transform: translateY(-12px);
@@ -494,7 +488,7 @@ ul {
 }
 
 .pricing-card--featured .check {
-  color: rgba(255,255,255,.9);
+  color: #ffd166;
 }
 
 .pricing-card--featured .features-list li {
