@@ -641,6 +641,8 @@
         </div>
         <div class="contact__form-wrapper">
           <form class="contact-form" id="contact-form" novalidate aria-label="Formulario de contacto">
+            <!-- Formspree: fixed subject for every submission -->
+            <input type="hidden" name="_subject" value="Contacto de la web" />
             <div class="contact-form__row">
               <div class="contact-form__group">
                 <label for="name" class="contact-form__label">Nombre *</label>

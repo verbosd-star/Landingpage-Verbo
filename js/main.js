@@ -131,6 +131,12 @@
   }
 
   // ─── Contact Form ─────────────────────────────────────────────────────────
+  // To enable email delivery to verbosd@gmail.com:
+  //   1. Sign up at https://formspree.io (free tier is enough)
+  //   2. Create a new form, set the destination to verbosd@gmail.com
+  //   3. Replace 'YOUR_FORM_ID' below with the form ID Formspree gives you
+  var FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+
   const contactForm   = document.getElementById('contact-form');
   const formSuccess   = document.getElementById('form-success');
   const submitBtn     = contactForm
@@ -187,21 +193,56 @@
 
       if (!validateForm()) return;
 
-      // Simulate async submission
+      // Guard: warn in development if Formspree has not been configured yet
+      if (FORMSPREE_ENDPOINT.indexOf('YOUR_FORM_ID') !== -1) {
+        console.warn(
+          'Formspree no está configurado. Reemplaza YOUR_FORM_ID en js/main.js ' +
+          'con el ID de tu formulario de https://formspree.io'
+        );
+      }
+
+      // Submit form data to Formspree (sends email to verbosd@gmail.com
+      // with subject "Contacto de la web")
       submitBtn.classList.add('loading');
       submitBtn.disabled = true;
 
-      setTimeout(function () {
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        contactForm.reset();
-        if (formSuccess) {
-          formSuccess.style.display = 'block';
-          setTimeout(function () {
-            formSuccess.style.display = 'none';
-          }, 6000);
-        }
-      }, 1500);
+      var formData = new FormData(contactForm);
+
+      fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(function (response) {
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+
+          if (response.ok) {
+            contactForm.reset();
+            if (formSuccess) {
+              formSuccess.style.display = 'block';
+              setTimeout(function () {
+                formSuccess.style.display = 'none';
+              }, 6000);
+            }
+          } else {
+            response.json()
+              .then(function (data) {
+                var msg = (data.errors && data.errors.length)
+                  ? data.errors.map(function (err) { return err.message; }).join(', ')
+                  : 'Hubo un error al enviar el mensaje. Por favor intenta de nuevo.';
+                alert(msg);
+              })
+              .catch(function () {
+                alert('Hubo un error al enviar el mensaje. Por favor intenta de nuevo.');
+              });
+          }
+        })
+        .catch(function () {
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+          alert('Hubo un error al enviar el mensaje. Por favor intenta de nuevo.');
+        });
     });
   }
 
