@@ -641,8 +641,9 @@
         </div>
         <div class="contact__form-wrapper">
           <form class="contact-form" id="contact-form" novalidate aria-label="Formulario de contacto">
-            <!-- Formspree: fixed subject for every submission -->
+            <!-- FormSubmit hidden fields: subject and disable captcha redirect for AJAX -->
             <input type="hidden" name="_subject" value="Contacto de la web" />
+            <input type="hidden" name="_captcha" value="false" />
             <div class="contact-form__row">
               <div class="contact-form__group">
                 <label for="name" class="contact-form__label">Nombre *</label>

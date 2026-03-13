@@ -131,11 +131,11 @@
   }
 
   // ─── Contact Form ─────────────────────────────────────────────────────────
-  // To enable email delivery to verbosd@gmail.com:
-  //   1. Sign up at https://formspree.io (free tier is enough)
-  //   2. Create a new form, set the destination to verbosd@gmail.com
-  //   3. Replace 'YOUR_FORM_ID' below with the form ID Formspree gives you
-  var FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+  // Uses FormSubmit (https://formsubmit.co) — no account or API key required.
+  // On the very first submission, FormSubmit will send a one-click verification
+  // email to verbosd@gmail.com. After confirming, every form submission is
+  // delivered to that inbox with subject "Contacto de la web".
+  var FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/verbosd@gmail.com';
 
   const contactForm   = document.getElementById('contact-form');
   const formSuccess   = document.getElementById('form-success');
@@ -193,22 +193,16 @@
 
       if (!validateForm()) return;
 
-      // Guard: warn in development if Formspree has not been configured yet
-      if (FORMSPREE_ENDPOINT.indexOf('YOUR_FORM_ID') !== -1) {
-        console.warn(
-          'Formspree no está configurado. Reemplaza YOUR_FORM_ID en js/main.js ' +
-          'con el ID de tu formulario de https://formspree.io'
-        );
-      }
-
-      // Submit form data to Formspree (sends email to verbosd@gmail.com
+      // Submit form data to FormSubmit (delivers email to verbosd@gmail.com
       // with subject "Contacto de la web")
       submitBtn.classList.add('loading');
       submitBtn.disabled = true;
 
       var formData = new FormData(contactForm);
+      var ERR_GENERIC = 'Hubo un error al enviar el mensaje. Por favor intenta de nuevo.';
+      var ERR_NETWORK = 'No se pudo conectar con el servidor. Verifica tu conexión e intenta de nuevo.';
 
-      fetch(FORMSPREE_ENDPOINT, {
+      fetch(FORMSUBMIT_ENDPOINT, {
         method: 'POST',
         body: formData,
         headers: { 'Accept': 'application/json' }
@@ -230,18 +224,18 @@
               .then(function (data) {
                 var msg = (data.errors && data.errors.length)
                   ? data.errors.map(function (err) { return err.message; }).join(', ')
-                  : 'Hubo un error al enviar el mensaje. Por favor intenta de nuevo.';
+                  : ERR_GENERIC;
                 alert(msg);
               })
               .catch(function () {
-                alert('Hubo un error al enviar el mensaje. Por favor intenta de nuevo.');
+                alert(ERR_GENERIC);
               });
           }
         })
         .catch(function () {
           submitBtn.classList.remove('loading');
           submitBtn.disabled = false;
-          alert('Hubo un error al enviar el mensaje. Por favor intenta de nuevo.');
+          alert(ERR_NETWORK);
         });
     });
   }
