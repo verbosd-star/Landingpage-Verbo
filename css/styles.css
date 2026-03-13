@@ -855,6 +855,17 @@ button {
   flex-shrink: 0;
 }
 
+.plan-card__recommended {
+  margin-top: 14px;
+  text-align: center;
+  font-family: var(--font-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+}
+
 @media (max-width: 640px) {
   .social-plans__grid {
     grid-template-columns: 1fr;
