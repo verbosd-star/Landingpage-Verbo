@@ -199,6 +199,12 @@
       submitBtn.disabled = true;
 
       var formData = new FormData(contactForm);
+      // Mirror the sender's email into _replyto so replies go directly to them
+      var replyToEl = document.getElementById('_replyto');
+      var emailInput = contactForm.querySelector('input[type="email"]');
+      if (replyToEl && emailInput) {
+        replyToEl.value = emailInput.value.trim();
+      }
       var ERR_GENERIC = 'Hubo un error al enviar el mensaje. Por favor intenta de nuevo.';
       var ERR_NETWORK = 'No se pudo conectar con el servidor. Verifica tu conexión e intenta de nuevo.';
 
@@ -222,8 +228,9 @@
           } else {
             response.json()
               .then(function (data) {
-                var msg = (data.errors && data.errors.length)
-                  ? data.errors.map(function (err) { return err.message; }).join(', ')
+                // FormSubmit returns {success, message} on error
+                var msg = (data.message && data.message.length)
+                  ? data.message
                   : ERR_GENERIC;
                 alert(msg);
               })
