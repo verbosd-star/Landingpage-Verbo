@@ -1547,6 +1547,13 @@ button {
   max-width: 200px;
 }
 
+.footer__nav {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 3vw, 48px);
+}
+
 .footer__nav-title {
   font-family: var(--font-primary);
   font-size: 0.82rem;
@@ -1657,6 +1664,11 @@ button {
 
   .footer__brand {
     grid-column: span 2;
+  }
+
+  .footer__nav {
+    grid-column: span 2;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -1777,6 +1789,11 @@ button {
   .footer__brand {
     grid-column: span 2;
   }
+
+  .footer__nav {
+    grid-column: span 2;
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Phones */
@@ -1812,6 +1829,11 @@ button {
 
   .footer__brand {
     grid-column: span 1;
+  }
+
+  .footer__nav {
+    grid-column: span 1;
+    grid-template-columns: 1fr;
   }
 
   .footer__bottom .container {
