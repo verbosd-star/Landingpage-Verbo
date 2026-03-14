@@ -358,17 +358,17 @@ button {
 
 .hero__content {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: clamp(40px, 6vw, 80px);
+  text-align: center;
   padding-block: var(--section-py);
 }
 
 .hero__text {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 24px;
 }
 
@@ -1637,7 +1637,6 @@ button {
 /* Large tablets */
 @media (max-width: 1024px) {
   .hero__content {
-    grid-template-columns: 1fr 1fr;
     gap: 40px;
   }
 
@@ -1704,21 +1703,11 @@ button {
 
   /* Hero mobile */
   .hero__content {
-    grid-template-columns: 1fr;
     text-align: center;
   }
 
   .hero__text {
     align-items: center;
-    order: 2;
-  }
-
-  .hero__visual {
-    order: 1;
-  }
-
-  .hero__logo-wrapper {
-    width: min(260px, 55vw);
   }
 
   .hero__stats {
