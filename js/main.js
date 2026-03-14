@@ -131,6 +131,12 @@
   }
 
   // ─── Contact Form ─────────────────────────────────────────────────────────
+  // Uses FormSubmit (https://formsubmit.co) — no account or API key required.
+  // On the very first submission, FormSubmit will send a one-click verification
+  // email to verbosd@gmail.com. After confirming, every form submission is
+  // delivered to that inbox with subject "Contacto de la web".
+  var FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/verbosd@gmail.com';
+
   const contactForm   = document.getElementById('contact-form');
   const formSuccess   = document.getElementById('form-success');
   const submitBtn     = contactForm
@@ -187,21 +193,57 @@
 
       if (!validateForm()) return;
 
-      // Simulate async submission
+      // Submit form data to FormSubmit (delivers email to verbosd@gmail.com
+      // with subject "Contacto de la web")
       submitBtn.classList.add('loading');
       submitBtn.disabled = true;
 
-      setTimeout(function () {
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        contactForm.reset();
-        if (formSuccess) {
-          formSuccess.style.display = 'block';
-          setTimeout(function () {
-            formSuccess.style.display = 'none';
-          }, 6000);
-        }
-      }, 1500);
+      var formData = new FormData(contactForm);
+      // Mirror the sender's email into _replyto so replies go directly to them
+      var replyToEl = document.getElementById('_replyto');
+      var emailInput = contactForm.querySelector('input[type="email"]');
+      if (replyToEl && emailInput) {
+        replyToEl.value = emailInput.value.trim();
+      }
+      var ERR_GENERIC = 'Hubo un error al enviar el mensaje. Por favor intenta de nuevo.';
+      var ERR_NETWORK = 'No se pudo conectar con el servidor. Verifica tu conexión e intenta de nuevo.';
+
+      fetch(FORMSUBMIT_ENDPOINT, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(function (response) {
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+
+          if (response.ok) {
+            contactForm.reset();
+            if (formSuccess) {
+              formSuccess.style.display = 'block';
+              setTimeout(function () {
+                formSuccess.style.display = 'none';
+              }, 6000);
+            }
+          } else {
+            response.json()
+              .then(function (data) {
+                // FormSubmit returns {success, message} on error
+                var msg = (data.message && data.message.length)
+                  ? data.message
+                  : ERR_GENERIC;
+                alert(msg);
+              })
+              .catch(function () {
+                alert(ERR_GENERIC);
+              });
+          }
+        })
+        .catch(function () {
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+          alert(ERR_NETWORK);
+        });
     });
   }
 
