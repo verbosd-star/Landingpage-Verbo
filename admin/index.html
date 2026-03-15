@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Verbo Taller</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="../img/Logo Verbo-04.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="../img/Logo Verbo-03.png" alt="Verbo Taller" />
+    </div>
+    <h1 class="login-title">Panel de Administración</h1>
+    <p class="login-subtitle">Ingresa tu contraseña para continuar</p>
+
+    <div class="alert alert-error" id="login-error" role="alert">
+      Contraseña incorrecta. Inténtalo de nuevo.
+    </div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          class="form-input"
+          placeholder="••••••••••"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary" id="login-btn">
+        Ingresar al Panel
+      </button>
+    </form>
+
+    <p class="login-back">
+      <a href="../index.html">← Volver al sitio</a>
+    </p>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var AUTH_KEY         = 'verbo_admin_auth';
+  var PASS_KEY         = 'verbo_admin_password';
+  var DEFAULT_PASS     = 'verbo2024';
+  var SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 hours
+
+  // If already authenticated, redirect to dashboard
+  try {
+    var existing = JSON.parse(localStorage.getItem(AUTH_KEY));
+    if (existing && existing.expires > Date.now()) {
+      window.location.replace('dashboard.html');
+    }
+  } catch (e) { /* ignore */ }
+
+  async function hashPassword(pw) {
+    var encoder = new TextEncoder();
+    var data    = encoder.encode(pw);
+    var buffer  = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buffer))
+      .map(function (b) { return b.toString(16).padStart(2, '0'); })
+      .join('');
+  }
+
+  var form     = document.getElementById('login-form');
+  var errorEl  = document.getElementById('login-error');
+  var loginBtn = document.getElementById('login-btn');
+  var passIn   = document.getElementById('password');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var input = passIn.value;
+    if (!input) return;
+
+    loginBtn.disabled    = true;
+    loginBtn.textContent = 'Verificando…';
+    errorEl.classList.remove('visible');
+
+    try {
+      var storedHash = localStorage.getItem(PASS_KEY);
+      if (!storedHash) {
+        // First use: set default password hash
+        storedHash = await hashPassword(DEFAULT_PASS);
+        localStorage.setItem(PASS_KEY, storedHash);
+      }
+      var inputHash = await hashPassword(input);
+
+      if (inputHash === storedHash) {
+        // Create session
+        localStorage.setItem(AUTH_KEY, JSON.stringify({
+          expires: Date.now() + SESSION_DURATION
+        }));
+        window.location.replace('dashboard.html');
+      } else {
+        passIn.classList.add('error');
+        errorEl.classList.add('visible');
+        loginBtn.disabled    = false;
+        loginBtn.textContent = 'Ingresar al Panel';
+        passIn.focus();
+      }
+    } catch (err) {
+      errorEl.textContent = 'Error al verificar la contraseña. Intenta de nuevo.';
+      errorEl.classList.add('visible');
+      loginBtn.disabled    = false;
+      loginBtn.textContent = 'Ingresar al Panel';
+    }
+  });
+
+  passIn.addEventListener('input', function () {
+    passIn.classList.remove('error');
+    errorEl.classList.remove('visible');
+  });
+})();
+</script>
+</body>
+</html>
