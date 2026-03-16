@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – Admin Verbo Taller</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="../img/Logo Verbo-04.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Navegación del admin">
+    <div class="sidebar__logo">
+      <img src="../img/Logo Verbo-03.png" alt="Verbo Taller" />
+      <span class="sidebar__logo-text">Admin Panel</span>
+    </div>
+
+    <nav class="sidebar__nav">
+      <p class="sidebar__section-label">Principal</p>
+
+      <button class="nav-item active" data-tab="overview">
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.75"/>
+          <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.75"/>
+          <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.75"/>
+          <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.75"/>
+        </svg>
+        Resumen
+      </button>
+
+      <button class="nav-item" data-tab="content">
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+        Editor de Contenido
+      </button>
+
+      <button class="nav-item" data-tab="sections">
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <line x1="8" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="8" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="8" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="3" y1="6" x2="3.01" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="3.01" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="18" x2="3.01" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Orden de Secciones
+      </button>
+
+      <button class="nav-item" data-tab="statistics">
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="12" y1="20" x2="12" y2="4"  stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="6"  y1="20" x2="6"  y2="14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+        Estadísticas
+      </button>
+
+      <p class="sidebar__section-label">Sistema</p>
+
+      <button class="nav-item" data-tab="settings">
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.75"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="1.75"/>
+        </svg>
+        Configuración
+      </button>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user">
+        <div class="sidebar__avatar">VT</div>
+        <div class="sidebar__user-info">
+          <p class="sidebar__user-name">Verbo Taller</p>
+          <p class="sidebar__user-role">Administrador</p>
+        </div>
+      </div>
+      <button class="nav-item" id="logout-btn">
+        <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <polyline points="16 17 21 12 16 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+        Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <div class="main-content">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <button class="btn btn-secondary btn-icon menu-toggle" id="menu-toggle" aria-label="Abrir menú">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <line x1="3" y1="6"  x2="21" y2="6"  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="topbar__title" id="topbar-title">Resumen</span>
+      </div>
+      <div class="topbar__actions">
+        <a href="../index.html" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="15 3 21 3 21 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="10" y1="14" x2="21" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Ver Sitio
+        </a>
+      </div>
+    </header>
+
+    <!-- ═══ TAB: OVERVIEW ═══ -->
+    <section class="page-content tab-panel active" id="tab-overview">
+      <div class="page-header">
+        <h1 class="page-header__title">¡Bienvenido al Panel de Administración!</h1>
+        <p class="page-header__desc">Administra el contenido, el orden de las secciones y revisa las estadísticas de tu landing page.</p>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <span class="stat-card__label">Total Visitas</span>
+          <span class="stat-card__value" id="ov-visits">—</span>
+          <span class="stat-card__sub">Visitas acumuladas</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <span class="stat-card__label">Visitas Hoy</span>
+          <span class="stat-card__value" id="ov-today">—</span>
+          <span class="stat-card__sub">Sesiones del día</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span class="stat-card__label">Formularios Enviados</span>
+          <span class="stat-card__value" id="ov-forms">—</span>
+          <span class="stat-card__sub">Contactos recibidos</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span class="stat-card__label">Secciones Activas</span>
+          <span class="stat-card__value" id="ov-sections">—</span>
+          <span class="stat-card__sub">En el orden actual</span>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <p class="card-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" stroke="currentColor" stroke-width="2"/><polyline points="13 2 13 9 20 9" stroke="currentColor" stroke-width="2"/></svg>
+              Acciones Rápidas
+            </p>
+            <p class="card-subtitle">Navega directamente a las secciones más usadas</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;">
+          <button class="btn btn-secondary" data-goto-tab="content">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"/></svg>
+            Editar Contenido
+          </button>
+          <button class="btn btn-secondary" data-goto-tab="sections">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><line x1="8" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/><line x1="8" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2"/><line x1="3" y1="6" x2="3.01" y2="6" stroke="currentColor" stroke-width="2"/></svg>
+            Reordenar
+          </button>
+          <button class="btn btn-secondary" data-goto-tab="statistics">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" stroke-width="2"/><line x1="12" y1="20" x2="12" y2="4" stroke="currentColor" stroke-width="2"/><line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" stroke-width="2"/></svg>
+            Estadísticas
+          </button>
+          <button class="btn btn-secondary" data-goto-tab="settings">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/></svg>
+            Configuración
+          </button>
+        </div>
+      </div>
+
+      <!-- Last update info -->
+      <div class="card">
+        <div class="card-header" style="margin-bottom:0;padding-bottom:0;border-bottom:none;">
+          <div>
+            <p class="card-title">Última Visita al Sitio</p>
+            <p class="card-subtitle" id="ov-last-update">—</p>
+          </div>
+          <span class="badge badge-green">En Línea</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ TAB: CONTENT EDITOR ═══ -->
+    <section class="page-content tab-panel" id="tab-content">
+      <div class="page-header">
+        <h1 class="page-header__title">Editor de Contenido</h1>
+        <p class="page-header__desc">Edita los textos de cada sección. Los cambios se aplican inmediatamente al sitio.</p>
+      </div>
+
+      <div class="editor-layout">
+        <!-- Section navigation -->
+        <div class="section-nav">
+          <ul class="section-nav__list">
+            <li><button class="section-nav__item active" data-section="hero"><span class="section-nav__dot"></span>Hero / Inicio</button></li>
+            <li><button class="section-nav__item" data-section="services"><span class="section-nav__dot"></span>Servicios</button></li>
+            <li><button class="section-nav__item" data-section="about"><span class="section-nav__dot"></span>Nosotros</button></li>
+            <li><button class="section-nav__item" data-section="process"><span class="section-nav__dot"></span>Proceso</button></li>
+            <li><button class="section-nav__item" data-section="portfolio"><span class="section-nav__dot"></span>Portafolio</button></li>
+            <li><button class="section-nav__item" data-section="testimonials"><span class="section-nav__dot"></span>Testimonios</button></li>
+            <li><button class="section-nav__item" data-section="cta"><span class="section-nav__dot"></span>CTA Band</button></li>
+            <li><button class="section-nav__item" data-section="contact"><span class="section-nav__dot"></span>Contacto</button></li>
+            <li><button class="section-nav__item" data-section="footer"><span class="section-nav__dot"></span>Footer</button></li>
+          </ul>
+        </div>
+
+        <!-- Editor panels -->
+        <div>
+
+          <!-- ── Hero ── -->
+          <div class="editor-panel active" data-section="hero">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Hero / Inicio</p>
+                  <p class="card-subtitle">Sección principal de la landing page</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="hero">Guardar cambios</button>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Encabezado</p>
+                <div class="form-group">
+                  <label class="form-label">Insignia / Badge</label>
+                  <input type="text" class="form-input" data-field="hero.badge" />
+                  <p class="form-hint">Texto pequeño sobre el título principal</p>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Título — Parte 1</label>
+                    <input type="text" class="form-input" data-field="hero.titleLine1" />
+                    <p class="form-hint">Texto antes de la palabra resaltada</p>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Palabra Resaltada</label>
+                    <input type="text" class="form-input" data-field="hero.titleAccent" />
+                    <p class="form-hint">Aparece en color acento (violeta)</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Título — Parte 2</label>
+                  <input type="text" class="form-input" data-field="hero.titleLine2" />
+                  <p class="form-hint">Texto después de la palabra resaltada</p>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Descripción</label>
+                  <textarea class="form-textarea" data-field="hero.description"></textarea>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Botones</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Botón Principal</label>
+                    <input type="text" class="form-input" data-field="hero.btn1" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Botón Secundario</label>
+                    <input type="text" class="form-input" data-field="hero.btn2" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Estadísticas</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Número — Estadística 1</label>
+                    <input type="text" class="form-input" data-field="hero.stat1Number" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Etiqueta — Estadística 1</label>
+                    <input type="text" class="form-input" data-field="hero.stat1Label" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Número — Estadística 2</label>
+                    <input type="text" class="form-input" data-field="hero.stat2Number" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Etiqueta — Estadística 2</label>
+                    <input type="text" class="form-input" data-field="hero.stat2Label" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Número — Estadística 3</label>
+                    <input type="text" class="form-input" data-field="hero.stat3Number" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Etiqueta — Estadística 3</label>
+                    <input type="text" class="form-input" data-field="hero.stat3Label" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Services ── -->
+          <div class="editor-panel" data-section="services">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Servicios</p>
+                  <p class="card-subtitle">Encabezado de la sección de servicios</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="services">Guardar cambios</button>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Badge / Insignia</label>
+                <input type="text" class="form-input" data-field="services.badge" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Título de la Sección</label>
+                <input type="text" class="form-input" data-field="services.title" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Subtítulo</label>
+                <textarea class="form-textarea" data-field="services.subtitle"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── About ── -->
+          <div class="editor-panel" data-section="about">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Nosotros</p>
+                  <p class="card-subtitle">Sección "Quiénes somos"</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="about">Guardar cambios</button>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Encabezado</p>
+                <div class="form-group">
+                  <label class="form-label">Badge</label>
+                  <input type="text" class="form-input" data-field="about.badge" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Título</label>
+                  <input type="text" class="form-input" data-field="about.title" />
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Número Destacado</label>
+                    <input type="text" class="form-input" data-field="about.accentNumber" />
+                    <p class="form-hint">Ej: "10+"</p>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Texto Destacado</label>
+                    <input type="text" class="form-input" data-field="about.accentText" />
+                    <p class="form-hint">Ej: "Años transformando marcas"</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Historia</p>
+                <div class="form-group">
+                  <label class="form-label">Párrafo Principal (Lead)</label>
+                  <textarea class="form-textarea" data-field="about.lead" style="min-height:120px"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Párrafo 2</label>
+                  <textarea class="form-textarea" data-field="about.text1" style="min-height:120px"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Párrafo 3</label>
+                  <textarea class="form-textarea" data-field="about.text2" style="min-height:120px"></textarea>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Pilares / Valores</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Pilar 1 — Título</label>
+                    <input type="text" class="form-input" data-field="about.pillar1Title" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Pilar 1 — Descripción</label>
+                    <input type="text" class="form-input" data-field="about.pillar1Text" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Pilar 2 — Título</label>
+                    <input type="text" class="form-input" data-field="about.pillar2Title" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Pilar 2 — Descripción</label>
+                    <input type="text" class="form-input" data-field="about.pillar2Text" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Pilar 3 — Título</label>
+                    <input type="text" class="form-input" data-field="about.pillar3Title" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Pilar 3 — Descripción</label>
+                    <input type="text" class="form-input" data-field="about.pillar3Text" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Process ── -->
+          <div class="editor-panel" data-section="process">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Proceso</p>
+                  <p class="card-subtitle">Los 4 pasos de trabajo</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="process">Guardar cambios</button>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Encabezado</p>
+                <div class="form-group">
+                  <label class="form-label">Badge</label>
+                  <input type="text" class="form-input" data-field="process.badge" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Título</label>
+                  <input type="text" class="form-input" data-field="process.title" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Subtítulo</label>
+                  <textarea class="form-textarea" data-field="process.subtitle"></textarea>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Paso 01</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-input" data-field="process.step1Title" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-input" data-field="process.step1Text" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Paso 02</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-input" data-field="process.step2Title" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-input" data-field="process.step2Text" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Paso 03</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-input" data-field="process.step3Title" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-input" data-field="process.step3Text" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Paso 04</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-input" data-field="process.step4Title" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-input" data-field="process.step4Text" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Portfolio ── -->
+          <div class="editor-panel" data-section="portfolio">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Portafolio</p>
+                  <p class="card-subtitle">Encabezado de la sección de casos de éxito</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="portfolio">Guardar cambios</button>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Badge</label>
+                <input type="text" class="form-input" data-field="portfolio.badge" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Título</label>
+                <input type="text" class="form-input" data-field="portfolio.title" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Subtítulo</label>
+                <textarea class="form-textarea" data-field="portfolio.subtitle"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Testimonials ── -->
+          <div class="editor-panel" data-section="testimonials">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Testimonios</p>
+                  <p class="card-subtitle">Reseñas de clientes</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="testimonials">Guardar cambios</button>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Encabezado</p>
+                <div class="form-group">
+                  <label class="form-label">Badge</label>
+                  <input type="text" class="form-input" data-field="testimonials.badge" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Título</label>
+                  <input type="text" class="form-input" data-field="testimonials.title" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Subtítulo</label>
+                  <textarea class="form-textarea" data-field="testimonials.subtitle"></textarea>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Testimonio 1</p>
+                <div class="form-group">
+                  <label class="form-label">Cita</label>
+                  <textarea class="form-textarea" data-field="testimonials.t1Quote"></textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-input" data-field="testimonials.t1Name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Cargo / Empresa</label>
+                    <input type="text" class="form-input" data-field="testimonials.t1Role" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Testimonio 2</p>
+                <div class="form-group">
+                  <label class="form-label">Cita</label>
+                  <textarea class="form-textarea" data-field="testimonials.t2Quote"></textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-input" data-field="testimonials.t2Name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Cargo / Empresa</label>
+                    <input type="text" class="form-input" data-field="testimonials.t2Role" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Testimonio 3</p>
+                <div class="form-group">
+                  <label class="form-label">Cita</label>
+                  <textarea class="form-textarea" data-field="testimonials.t3Quote"></textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-input" data-field="testimonials.t3Name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Cargo / Empresa</label>
+                    <input type="text" class="form-input" data-field="testimonials.t3Role" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-section">
+                <p class="form-section__title">Testimonio 4</p>
+                <div class="form-group">
+                  <label class="form-label">Cita</label>
+                  <textarea class="form-textarea" data-field="testimonials.t4Quote"></textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-input" data-field="testimonials.t4Name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Cargo / Empresa</label>
+                    <input type="text" class="form-input" data-field="testimonials.t4Role" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CTA Band ── -->
+          <div class="editor-panel" data-section="cta">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Llamada a la Acción (CTA)</p>
+                  <p class="card-subtitle">Banda de conversión entre secciones</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="cta">Guardar cambios</button>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Título</label>
+                <input type="text" class="form-input" data-field="cta.title" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Texto</label>
+                <textarea class="form-textarea" data-field="cta.text"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Texto del Botón</label>
+                <input type="text" class="form-input" data-field="cta.btn" />
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Contact ── -->
+          <div class="editor-panel" data-section="contact">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Contacto</p>
+                  <p class="card-subtitle">Sección de contacto</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="contact">Guardar cambios</button>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Badge</label>
+                <input type="text" class="form-input" data-field="contact.badge" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Título</label>
+                <input type="text" class="form-input" data-field="contact.title" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Texto Descriptivo</label>
+                <textarea class="form-textarea" style="min-height:120px" data-field="contact.text"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Footer ── -->
+          <div class="editor-panel" data-section="footer">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Footer</p>
+                  <p class="card-subtitle">Pie de página del sitio</p>
+                </div>
+                <button class="btn btn-success btn-sm" data-save-section="footer">Guardar cambios</button>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Eslogan / Tagline</label>
+                <input type="text" class="form-input" data-field="footer.tagline" />
+                <p class="form-hint">Texto que aparece debajo del logo en el footer</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end editor panels -->
+      </div><!-- end editor-layout -->
+    </section>
+
+    <!-- ═══ TAB: SECTION ORDER ═══ -->
+    <section class="page-content tab-panel" id="tab-sections">
+      <div class="page-header">
+        <h1 class="page-header__title">Orden de Secciones</h1>
+        <p class="page-header__desc">Arrastra y suelta las secciones para cambiar su posición en el sitio.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <p class="card-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><line x1="8" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/><line x1="8" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2"/><line x1="3" y1="6" x2="3.01" y2="6" stroke="currentColor" stroke-width="2"/></svg>
+              Secciones de la Página
+            </p>
+            <p class="card-subtitle">Arrastra las secciones para reordenarlas</p>
+          </div>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-secondary btn-sm" id="reset-order-btn">Restablecer</button>
+            <button class="btn btn-success btn-sm" id="save-order-btn">Guardar Orden</button>
+          </div>
+        </div>
+        <ul class="sortable-list" id="sortable-list"></ul>
+      </div>
+
+      <div class="card" style="border-color:rgba(124,58,237,0.3);background:rgba(124,58,237,0.04);">
+        <p class="card-title" style="font-size:0.85rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+          Información
+        </p>
+        <p style="font-size:0.8rem;color:var(--admin-text-muted);margin-top:0.5rem;">El orden se aplicará la próxima vez que un visitante cargue la página. El Hero siempre es la primera sección visible aunque no necesariamente la primera en el DOM.</p>
+      </div>
+    </section>
+
+    <!-- ═══ TAB: STATISTICS ═══ -->
+    <section class="page-content tab-panel" id="tab-statistics">
+      <div class="page-header">
+        <h1 class="page-header__title">Estadísticas</h1>
+        <p class="page-header__desc">Datos de visitas y comportamiento registrados localmente.</p>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span class="stat-card__label">Total Visitas</span>
+          <span class="stat-card__value" id="st-total">—</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span class="stat-card__label">Visitas Hoy</span>
+          <span class="stat-card__value" id="st-today">—</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span class="stat-card__label">Formularios Enviados</span>
+          <span class="stat-card__value" id="st-forms">—</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <span class="stat-card__label">Última Visita</span>
+          <span class="stat-card__value" style="font-size:0.9rem;line-height:1.3;" id="st-last-visit">—</span>
+        </div>
+      </div>
+
+      <!-- Section views -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <p class="card-title">Vistas por Sección</p>
+            <p class="card-subtitle">Secciones más vistas por los visitantes</p>
+          </div>
+        </div>
+        <div class="bar-chart" id="section-bar-chart">
+          <p style="color:var(--admin-text-dim);font-size:0.85rem;">Cargando datos…</p>
+        </div>
+      </div>
+
+      <!-- Visit history -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <p class="card-title">Historial de Visitas (Últimos 30 días)</p>
+            <p class="card-subtitle">Una barra por día</p>
+          </div>
+        </div>
+        <div class="visits-grid" id="visit-history-chart">
+          <p style="color:var(--admin-text-dim);font-size:0.85rem;align-self:center;">Sin datos aún</p>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:0.5rem;">
+          <span style="font-size:0.72rem;color:var(--admin-text-dim)" id="hist-first"></span>
+          <span style="font-size:0.72rem;color:var(--admin-text-dim)" id="hist-last"></span>
+        </div>
+      </div>
+
+      <div class="card" style="border-color:rgba(124,58,237,0.3);background:rgba(124,58,237,0.04);">
+        <p class="card-title" style="font-size:0.85rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+          Nota sobre las estadísticas
+        </p>
+        <p style="font-size:0.8rem;color:var(--admin-text-muted);margin-top:0.5rem;">Las estadísticas se almacenan en el navegador del visitante (localStorage). Para estadísticas más avanzadas considera integrar Google Analytics o una solución similar.</p>
+      </div>
+    </section>
+
+    <!-- ═══ TAB: SETTINGS ═══ -->
+    <section class="page-content tab-panel" id="tab-settings">
+      <div class="page-header">
+        <h1 class="page-header__title">Configuración</h1>
+        <p class="page-header__desc">Gestiona la seguridad y los datos del panel.</p>
+      </div>
+
+      <div class="settings-grid">
+
+        <!-- Change password -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2"/></svg>
+                Cambiar Contraseña
+              </p>
+              <p class="card-subtitle">Se recomienda cambiar la contraseña predeterminada.</p>
+            </div>
+          </div>
+          <div class="alert alert-error" id="pass-error"></div>
+          <div class="alert alert-success" id="pass-success">Contraseña cambiada exitosamente.</div>
+          <form id="change-pass-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Contraseña Actual</label>
+              <input type="password" id="current-pass" class="form-input" autocomplete="current-password" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nueva Contraseña</label>
+              <input type="password" id="new-pass" class="form-input" autocomplete="new-password" />
+              <p class="form-hint">Mínimo 6 caracteres</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirmar Nueva Contraseña</label>
+              <input type="password" id="new-pass-confirm" class="form-input" autocomplete="new-password" />
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:auto;">Actualizar Contraseña</button>
+          </form>
+        </div>
+
+        <!-- Data management -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polyline points="8 17 12 21 16 17" stroke="currentColor" stroke-width="2"/><line x1="12" y1="12" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29" stroke="currentColor" stroke-width="2"/></svg>
+                  Exportar Datos
+                </p>
+                <p class="card-subtitle">Descarga una copia de todos los datos del admin</p>
+              </div>
+            </div>
+            <button class="btn btn-secondary" id="export-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><polyline points="8 17 12 21 16 17" stroke="currentColor" stroke-width="2"/><line x1="12" y1="12" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29" stroke="currentColor" stroke-width="2"/></svg>
+              Descargar JSON
+            </button>
+          </div>
+
+          <div class="card danger-zone">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Zona de Peligro</p>
+                <p class="card-subtitle">Acciones irreversibles</p>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <div>
+                  <p style="font-size:0.875rem;font-weight:600;color:var(--admin-text);">Restablecer Contenido</p>
+                  <p style="font-size:0.78rem;color:var(--admin-text-muted);">Volver a los textos originales del sitio</p>
+                </div>
+                <button class="btn btn-danger btn-sm" id="reset-content-btn">Restablecer</button>
+              </div>
+              <hr class="divider" />
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <div>
+                  <p style="font-size:0.875rem;font-weight:600;color:var(--admin-text);">Restablecer Orden</p>
+                  <p style="font-size:0.78rem;color:var(--admin-text-muted);">Volver al orden de secciones predeterminado</p>
+                </div>
+                <button class="btn btn-danger btn-sm" id="reset-order-settings-btn">Restablecer</button>
+              </div>
+              <hr class="divider" />
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <div>
+                  <p style="font-size:0.875rem;font-weight:600;color:var(--admin-text);">Limpiar Estadísticas</p>
+                  <p style="font-size:0.78rem;color:var(--admin-text-muted);">Eliminar todos los datos de visitas</p>
+                </div>
+                <button class="btn btn-danger btn-sm" id="clear-stats-btn">Limpiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div><!-- end main-content -->
+</div><!-- end dashboard -->
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
