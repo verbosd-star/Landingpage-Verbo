@@ -9,6 +9,23 @@
   var CONTENT_KEY = 'verbo_content';
   var ORDER_KEY   = 'verbo_section_order';
   var STATS_KEY   = 'verbo_stats';
+  var POSTS_KEY   = 'verbo_portfolio_posts';
+
+  var GRADIENT_COLORS = [
+    'linear-gradient(135deg, #1a0a00 0%, #FF3B00 60%, #FFB800 100%)',
+    'linear-gradient(135deg, #000a1a 0%, #0047FF 100%)',
+    'linear-gradient(135deg, #0a001a 0%, #8B00FF 100%)',
+    'linear-gradient(135deg, #001a0a 0%, #00A651 100%)',
+    'linear-gradient(135deg, #1a1000 0%, #FFB800 100%)'
+  ];
+
+  var DEFAULT_POSTS = [
+    { id: 1, tag: 'Branding',     title: 'Identidad de Marca Completa',    text: 'Rediseño integral de identidad visual, sistema de marca y comunicación para empresa de tecnología.',                               image: '' },
+    { id: 2, tag: 'Social Media', title: 'Campaña 360°',                   text: 'Estrategia y ejecución multicanal que triplicó el engagement en 3 meses.',                                                          image: '' },
+    { id: 3, tag: 'Contenido',    title: 'Producción Audiovisual',          text: 'Serie de videos institucionales y reels que posicionaron la marca en el top de su categoría.',                                      image: '' },
+    { id: 4, tag: 'Publicidad',   title: 'Campaña Meta Ads',               text: 'ROAS de 4.5x con estrategia de segmentación avanzada y creativos de alto impacto.',                                                 image: '' },
+    { id: 5, tag: 'Estrategia',   title: 'Plan Anual de Comunicación',     text: 'Hoja de ruta completa de contenidos y campañas para marca de consumo masivo.',                                                      image: '' }
+  ];
 
   /** Safely escape HTML entities for safe innerHTML reconstruction */
   function escHtml(str) {
@@ -36,6 +53,16 @@
       return raw ? JSON.parse(raw) : null;
     } catch (e) {
       return null;
+    }
+  }
+
+  /** Read stored portfolio posts array */
+  function getPosts() {
+    try {
+      var raw = localStorage.getItem(POSTS_KEY);
+      return raw ? JSON.parse(raw) : DEFAULT_POSTS;
+    } catch (e) {
+      return DEFAULT_POSTS;
     }
   }
 
@@ -79,6 +106,55 @@
       escHtml(line1) + ' <br />\n            ' +
       '<span class="hero__title--accent">' + escHtml(accent) + '</span>' +
       ' ' + escHtml(line2);
+  }
+
+  /**
+   * Apply the about section logo URL if stored in content.
+   */
+  function applyAboutLogo(c) {
+    var el = document.querySelector('[data-about-logo]');
+    if (!el) return;
+    var url = c && c.about && c.about.logoUrl ? c.about.logoUrl : '';
+    if (url) el.src = url;
+  }
+
+  /**
+   * Render portfolio posts into #portfolio-posts-grid from localStorage data.
+   */
+  function renderPortfolioPosts() {
+    var grid = document.getElementById('portfolio-posts-grid');
+    if (!grid) return;
+    var posts = getPosts();
+    if (!posts || posts.length === 0) {
+      grid.innerHTML = '';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < posts.length; i++) {
+      var post  = posts[i];
+      var extra = (i === 0) ? ' portfolio-card--wide' : '';
+      var gradient = GRADIENT_COLORS[i % GRADIENT_COLORS.length];
+      var imgContent;
+      if (post.image) {
+        imgContent =
+          '<div class="portfolio-card__img" style="background:' + gradient + '">' +
+          '<img src="' + escHtml(post.image) + '" alt="' + escHtml(post.title) + '" style="width:100%;height:100%;object-fit:cover;display:block;" />' +
+          '</div>';
+      } else {
+        imgContent =
+          '<div class="portfolio-card__img" style="background:' + gradient + '"></div>';
+      }
+      html +=
+        '<article class="portfolio-card' + extra + '">' +
+        imgContent +
+        '<div class="portfolio-card__overlay">' +
+        '<span class="portfolio-card__tag">' + escHtml(post.tag)   + '</span>' +
+        '<h3 class="portfolio-card__title">'  + escHtml(post.title) + '</h3>' +
+        '<p class="portfolio-card__text">'    + escHtml(post.text)  + '</p>' +
+        '</div>' +
+        '</article>';
+    }
+    grid.innerHTML = html;
   }
 
   /**
@@ -191,6 +267,8 @@
     var order = getOrder();
     applyEditables(c);
     applyHeroTitle(c);
+    applyAboutLogo(c);
+    renderPortfolioPosts();
     if (order) applyOrder(order);
     trackVisit();
     trackSectionViews();

@@ -12,6 +12,7 @@
   var CONTENT_KEY      = 'verbo_content';
   var ORDER_KEY        = 'verbo_section_order';
   var STATS_KEY        = 'verbo_stats';
+  var POSTS_KEY        = 'verbo_portfolio_posts';
   var DEFAULT_PASS     = 'verbo2024';
   var SESSION_DURATION = 8 * 60 * 60 * 1000;
 
@@ -117,6 +118,14 @@
     }
   };
 
+  var DEFAULT_POSTS = [
+    { id: 1, tag: 'Branding',     title: 'Identidad de Marca Completa',  text: 'Rediseño integral de identidad visual, sistema de marca y comunicación para empresa de tecnología.',                image: '' },
+    { id: 2, tag: 'Social Media', title: 'Campaña 360°',                 text: 'Estrategia y ejecución multicanal que triplicó el engagement en 3 meses.',                                          image: '' },
+    { id: 3, tag: 'Contenido',    title: 'Producción Audiovisual',        text: 'Serie de videos institucionales y reels que posicionaron la marca en el top de su categoría.',                      image: '' },
+    { id: 4, tag: 'Publicidad',   title: 'Campaña Meta Ads',             text: 'ROAS de 4.5x con estrategia de segmentación avanzada y creativos de alto impacto.',                                 image: '' },
+    { id: 5, tag: 'Estrategia',   title: 'Plan Anual de Comunicación',   text: 'Hoja de ruta completa de contenidos y campañas para marca de consumo masivo.',                                      image: '' }
+  ];
+
   // ─── Auth Guard ──────────────────────────────────────────────────────────────
   function isAuthenticated() {
     try {
@@ -173,6 +182,27 @@
 
   function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
+  }
+
+  function loadPosts() {
+    try {
+      var raw = localStorage.getItem(POSTS_KEY);
+      return raw ? JSON.parse(raw) : deepClone(DEFAULT_POSTS);
+    } catch (e) {
+      return deepClone(DEFAULT_POSTS);
+    }
+  }
+
+  function savePosts(posts) {
+    localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
+  }
+
+  function nextPostId(posts) {
+    var max = 0;
+    for (var i = 0; i < posts.length; i++) {
+      if (posts[i].id > max) max = posts[i].id;
+    }
+    return max + 1;
   }
 
   // ─── Toast notification ──────────────────────────────────────────────────────
@@ -552,9 +582,11 @@
   var resetContentBtn = document.getElementById('reset-content-btn');
   if (resetContentBtn) {
     resetContentBtn.addEventListener('click', function () {
-      if (!confirm('¿Estás seguro de que deseas restablecer todo el contenido a los valores predeterminados? Esta acción no se puede deshacer.')) return;
+      if (!confirm('¿Estás seguro de que deseas restablecer todo el contenido (incluyendo publicaciones del portafolio) a los valores predeterminados? Esta acción no se puede deshacer.')) return;
       localStorage.removeItem(CONTENT_KEY);
+      localStorage.removeItem(POSTS_KEY);
       populateEditors();
+      renderPostsList();
       showToast('Contenido restablecido a los valores predeterminados', 'info');
     });
   }
@@ -591,6 +623,7 @@
         content:  loadContent(),
         order:    loadOrder(),
         stats:    loadStats(),
+        posts:    loadPosts(),
         exported: new Date().toISOString()
       };
       var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -613,8 +646,159 @@
       .join('');
   }
 
+  // ─── Portfolio Posts Manager ─────────────────────────────────────────────────
+  var postsList    = document.getElementById('posts-list');
+  var addPostBtn   = document.getElementById('add-post-btn');
+  var newPostTag   = document.getElementById('new-post-tag');
+  var newPostTitle = document.getElementById('new-post-title');
+  var newPostText  = document.getElementById('new-post-text');
+  var newPostImage = document.getElementById('new-post-image');
+  var newPostPreview    = document.getElementById('new-post-preview');
+  var newPostPreviewImg = document.getElementById('new-post-preview-img');
+  var pendingPostImage  = '';
+
+  function renderPostsList() {
+    if (!postsList) return;
+    var posts = loadPosts();
+    if (posts.length === 0) {
+      postsList.innerHTML = '<p style="color:var(--admin-text-dim);font-size:0.85rem;text-align:center;padding:0.75rem 0">Sin publicaciones. Agrega la primera abajo.</p>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < posts.length; i++) {
+      var p = posts[i];
+      var thumb = p.image
+        ? '<img src="' + escHtml(p.image) + '" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:6px;flex-shrink:0;" />'
+        : '<div style="width:52px;height:52px;border-radius:6px;background:var(--admin-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.5"/><polyline points="21 15 16 10 5 21" stroke="currentColor" stroke-width="1.5"/></svg></div>';
+      html +=
+        '<div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid var(--admin-border);">' +
+        thumb +
+        '<div style="flex:1;min-width:0;">' +
+        '<p style="font-size:0.82rem;font-weight:600;color:var(--admin-text);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(p.title) + '</p>' +
+        '<p style="font-size:0.75rem;color:var(--admin-text-muted);margin:2px 0 0;">' + escHtml(p.tag) + '</p>' +
+        '</div>' +
+        '<button class="btn btn-danger btn-sm" data-delete-post="' + p.id + '" style="flex-shrink:0;">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
+        'Eliminar' +
+        '</button>' +
+        '</div>';
+    }
+    postsList.innerHTML = html;
+
+    postsList.querySelectorAll('[data-delete-post]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id   = parseInt(btn.getAttribute('data-delete-post'), 10);
+        var psts = loadPosts();
+        var idx  = -1;
+        for (var k = 0; k < psts.length; k++) {
+          if (psts[k].id === id) { idx = k; break; }
+        }
+        if (idx > -1) {
+          psts.splice(idx, 1);
+          savePosts(psts);
+          renderPostsList();
+          showToast('Publicación eliminada ✓', 'success');
+        }
+      });
+    });
+  }
+
+  if (newPostImage) {
+    newPostImage.addEventListener('change', function () {
+      var file = newPostImage.files[0];
+      if (!file) { pendingPostImage = ''; newPostPreview.style.display = 'none'; return; }
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('La imagen supera 2 MB. Elige una imagen más pequeña.', 'error');
+        newPostImage.value = '';
+        pendingPostImage = '';
+        newPostPreview.style.display = 'none';
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        pendingPostImage = e.target.result;
+        newPostPreviewImg.src = pendingPostImage;
+        newPostPreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (addPostBtn) {
+    addPostBtn.addEventListener('click', function () {
+      var tag   = newPostTag   ? newPostTag.value.trim()   : '';
+      var title = newPostTitle ? newPostTitle.value.trim() : '';
+      var text  = newPostText  ? newPostText.value.trim()  : '';
+      if (!title) {
+        showToast('El título es obligatorio', 'error');
+        return;
+      }
+      var posts = loadPosts();
+      posts.push({ id: nextPostId(posts), tag: tag, title: title, text: text, image: pendingPostImage });
+      savePosts(posts);
+      renderPostsList();
+      if (newPostTag)   newPostTag.value   = '';
+      if (newPostTitle) newPostTitle.value = '';
+      if (newPostText)  newPostText.value  = '';
+      if (newPostImage) newPostImage.value = '';
+      pendingPostImage = '';
+      if (newPostPreview) newPostPreview.style.display = 'none';
+      showToast('Publicación agregada ✓', 'success');
+    });
+  }
+
+  // ─── About Logo Manager ──────────────────────────────────────────────────────
+  var aboutLogoUrl        = document.getElementById('about-logo-url');
+  var aboutLogoFile       = document.getElementById('about-logo-file');
+  var aboutLogoPreview    = document.getElementById('about-logo-preview');
+  var aboutLogoPreviewImg = document.getElementById('about-logo-preview-img');
+  var saveAboutLogoBtn    = document.getElementById('save-about-logo-btn');
+  var pendingAboutLogo    = '';
+
+  // Populate the about logo URL field
+  (function () {
+    var c = loadContent();
+    if (aboutLogoUrl && c.about && c.about.logoUrl) {
+      aboutLogoUrl.value = c.about.logoUrl;
+    }
+  })();
+
+  if (aboutLogoFile) {
+    aboutLogoFile.addEventListener('change', function () {
+      var file = aboutLogoFile.files[0];
+      if (!file) { pendingAboutLogo = ''; aboutLogoPreview.style.display = 'none'; return; }
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('La imagen supera 2 MB. Elige una imagen más pequeña.', 'error');
+        aboutLogoFile.value = '';
+        pendingAboutLogo = '';
+        aboutLogoPreview.style.display = 'none';
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        pendingAboutLogo = e.target.result;
+        aboutLogoPreviewImg.src = pendingAboutLogo;
+        aboutLogoPreview.style.display = 'block';
+        if (aboutLogoUrl) aboutLogoUrl.value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (saveAboutLogoBtn) {
+    saveAboutLogoBtn.addEventListener('click', function () {
+      var logoSrc = pendingAboutLogo || (aboutLogoUrl ? aboutLogoUrl.value.trim() : '');
+      var c = loadContent();
+      if (!c.about) c.about = {};
+      c.about.logoUrl = logoSrc;
+      saveContent(c);
+      showToast('Logo guardado ✓', 'success');
+    });
+  }
+
   // ─── Init ────────────────────────────────────────────────────────────────────
   populateEditors();
   renderOverview();
+  renderPostsList();
 
 })();
