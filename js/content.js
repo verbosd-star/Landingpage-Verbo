@@ -161,7 +161,7 @@
       }
       var dateStr = post.date ? formatPostDate(post.date) : '';
       html +=
-        '<article class="blog-card">' +
+        '<article class="blog-card" data-post-id="' + post.id + '" tabindex="0" role="button" aria-label="Leer m\u00e1s sobre ' + escHtml(post.title) + '">' +
         imgHtml +
         '<div class="blog-card__body">' +
         '<div class="blog-card__meta">' +
@@ -170,7 +170,7 @@
         '</div>' +
         '<h3 class="blog-card__title">' + escHtml(post.title) + '</h3>' +
         (post.text ? '<p class="blog-card__excerpt">' + escHtml(post.text) + '</p>' : '') +
-        '<button class="blog-card__readmore" data-post-id="' + post.id + '" aria-label="Leer m\u00e1s sobre ' + escHtml(post.title) + '">' +
+        '<button class="blog-card__readmore" tabindex="-1" aria-hidden="true">' +
         'Leer más' +
         '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
         '<line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
@@ -182,11 +182,23 @@
     }
     grid.innerHTML = html;
 
-    // Wire up "Leer más" buttons
-    var btns = grid.querySelectorAll('[data-post-id]');
-    for (var j = 0; j < btns.length; j++) {
-      btns[j].addEventListener('click', function () {
+    // Wire up card clicks (click anywhere on card, or Enter/Space on focused card)
+    var cards = grid.querySelectorAll('.blog-card[data-post-id]');
+    for (var j = 0; j < cards.length; j++) {
+      cards[j].addEventListener('click', function () {
         openBlogModal(parseInt(this.getAttribute('data-post-id'), 10));
+      });
+      cards[j].addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          openBlogModal(parseInt(this.getAttribute('data-post-id'), 10));
+        }
+        if (e.key === ' ') { e.preventDefault(); } // prevent page scroll
+      });
+      cards[j].addEventListener('keyup', function (e) {
+        if (e.key === ' ') {
+          openBlogModal(parseInt(this.getAttribute('data-post-id'), 10));
+        }
       });
     }
   }
