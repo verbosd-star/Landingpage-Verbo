@@ -60,7 +60,9 @@
   function getPosts() {
     try {
       var raw = localStorage.getItem(POSTS_KEY);
-      return raw ? JSON.parse(raw) : DEFAULT_POSTS;
+      if (!raw) return DEFAULT_POSTS;
+      var parsed = JSON.parse(raw);
+      return (Array.isArray(parsed) && parsed.length > 0) ? parsed : DEFAULT_POSTS;
     } catch (e) {
       return DEFAULT_POSTS;
     }
