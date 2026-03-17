@@ -936,5 +936,153 @@
 
   <script src="js/content.js"></script>
   <script src="js/main.js"></script>
+
+  <!-- Portfolio card click + modal JS — inlined so interactions always work
+       regardless of which version of content.js the server serves.
+       Uses event delegation so it handles both static fallback cards and
+       any cards dynamically inserted by content.js. -->
+  <script>
+  (function () {
+    'use strict';
+
+    var POSTS_KEY = 'verbo_portfolio_posts';
+
+    var DEFAULT_POSTS = [
+      { id: 1, tag: 'Branding',     title: 'Identidad de Marca Completa',  text: 'Rediseño integral de identidad visual, sistema de marca y comunicación para empresa de tecnología.',           body: 'El proyecto comenzó con un diagnóstico profundo de la marca existente. Identificamos sus fortalezas, debilidades y oportunidades en el mercado.\n\nDiseñamos un nuevo sistema visual coherente: logotipo, paleta de colores, tipografías y aplicaciones. Cada elemento fue creado para comunicar innovación y confianza.\n\nEl resultado fue una identidad que unificó todas las comunicaciones de la empresa y fortaleció su posición en el sector tecnológico.',                               date: '2024-03-10', image: '' },
+      { id: 2, tag: 'Social Media', title: 'Campaña 360°',                 text: 'Estrategia y ejecución multicanal que triplicó el engagement en 3 meses.',                                    body: 'Desarrollamos una estrategia 360° integrando Instagram, Facebook, LinkedIn y TikTok con un calendario editorial unificado.\n\nCreamos contenido nativo para cada plataforma, adaptando el mensaje sin perder la coherencia de marca. Combinamos publicaciones orgánicas con campañas pagadas segmentadas.\n\nEn 90 días el engagement aumentó un 312%, los seguidores crecieron un 85% y las consultas directas se triplicaron.',                                date: '2024-01-22', image: '' },
+      { id: 3, tag: 'Contenido',    title: 'Producción Audiovisual',        text: 'Serie de videos institucionales y reels que posicionaron la marca en el top de su categoría.',               body: 'La marca necesitaba contenido audiovisual que conectara emocionalmente con su audiencia y diferenciara sus servicios.\n\nProducimos una serie de 12 videos institucionales y 30 reels optimizados para redes sociales. Cada pieza contó con guion, dirección de arte, filmación y postproducción profesional.\n\nLos videos alcanzaron más de 2 millones de visualizaciones orgánicas en el primer mes, posicionando la marca como referente en su categoría.',     date: '2023-11-15', image: '' },
+      { id: 4, tag: 'Publicidad',   title: 'Campaña Meta Ads',             text: 'ROAS de 4.5x con estrategia de segmentación avanzada y creativos de alto impacto.',                           body: 'El cliente buscaba maximizar el retorno de su inversión publicitaria en Meta (Facebook e Instagram) para su línea de productos premium.\n\nDiseñamos una estrategia de segmentación por capas: audiencias frías con contenido educativo, retargeting de interesados y audiencias similares de compradores. Creamos sets de creativos con pruebas A/B sistemáticas.\n\nLogramos un ROAS promedio de 4.5x durante 3 meses consecutivos, con un costo por adquisición 40% menor al benchmark del sector.',                    date: '2023-09-05', image: '' },
+      { id: 5, tag: 'Estrategia',   title: 'Plan Anual de Comunicación',   text: 'Hoja de ruta completa de contenidos y campañas para marca de consumo masivo.',                               body: 'Desarrollamos el plan de comunicación anual para una marca de consumo masivo con presencia en tres países.\n\nEl plan incluyó: auditoría de comunicaciones, definición de pilares de contenido, calendario editorial de 52 semanas, planificación de campañas estacionales y presupuesto por canal.\n\nLa ejecución del plan resultó en un crecimiento del 67% en reconocimiento de marca y un aumento del 43% en ventas atribuibles a acciones de marketing.',     date: '2023-07-01', image: '' }
+    ];
+
+    function escHtml(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        var p = dateStr.split('-');
+        if (p.length !== 3) return dateStr;
+        var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+        if (isNaN(d.getTime())) return dateStr;
+        return d.toLocaleDateString('es-DO', { year: 'numeric', month: 'long', day: 'numeric' });
+      } catch (e) { return dateStr; }
+    }
+
+    function getPosts() {
+      try {
+        var raw = localStorage.getItem(POSTS_KEY);
+        if (!raw) return DEFAULT_POSTS;
+        var parsed = JSON.parse(raw);
+        return (Array.isArray(parsed) && parsed.length > 0) ? parsed : DEFAULT_POSTS;
+      } catch (e) { return DEFAULT_POSTS; }
+    }
+
+    function closeBlogModal() {
+      var modal = document.getElementById('blog-modal');
+      if (!modal) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function openBlogModal(id) {
+      var posts = getPosts();
+      var post = null;
+      for (var i = 0; i < posts.length; i++) {
+        if (parseInt(posts[i].id, 10) === parseInt(id, 10)) { post = posts[i]; break; }
+      }
+      if (!post) return;
+
+      var modal        = document.getElementById('blog-modal');
+      var modalTag     = document.getElementById('blog-modal-tag');
+      var modalDate    = document.getElementById('blog-modal-date');
+      var modalTitle   = document.getElementById('blog-modal-title');
+      var modalImg     = document.getElementById('blog-modal-img');
+      var modalImgWrap = document.getElementById('blog-modal-img-wrap');
+      var modalBody    = document.getElementById('blog-modal-body');
+      if (!modal) return;
+
+      if (modalTag)   modalTag.textContent   = post.tag   || '';
+      if (modalDate)  modalDate.textContent  = post.date  ? formatDate(post.date) : '';
+      if (modalTitle) modalTitle.textContent = post.title || '';
+
+      if (post.image) {
+        if (modalImg)     { modalImg.src = post.image; modalImg.alt = post.title || ''; }
+        if (modalImgWrap) modalImgWrap.style.display = '';
+      } else {
+        if (modalImgWrap) modalImgWrap.style.display = 'none';
+      }
+
+      if (modalBody) {
+        var raw        = post.body || post.text || '';
+        var paragraphs = raw.split(/\n+/);
+        var bodyHtml   = '';
+        for (var p = 0; p < paragraphs.length; p++) {
+          var para = paragraphs[p].trim();
+          if (para) bodyHtml += '<p>' + escHtml(para) + '</p>';
+        }
+        modalBody.innerHTML = bodyHtml || '<p>' + escHtml(post.text || '') + '</p>';
+      }
+
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function init() {
+      /* Event delegation on the grid — handles both the static fallback cards
+         already in the HTML and any cards dynamically inserted by content.js */
+      var grid = document.getElementById('portfolio-posts-grid');
+      if (grid && !grid.dataset.clickInited) {
+        grid.dataset.clickInited = '1';
+        grid.addEventListener('click', function (e) {
+          var el = e.target;
+          while (el && el !== grid) {
+            var pid = el.getAttribute && el.getAttribute('data-post-id');
+            if (pid) { openBlogModal(parseInt(pid, 10)); return; }
+            el = el.parentNode;
+          }
+        });
+        grid.addEventListener('keydown', function (e) {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          var el = document.activeElement;
+          var pid = el && el.getAttribute && el.getAttribute('data-post-id');
+          if (!pid) return;
+          e.preventDefault();
+          if (e.key === 'Enter') openBlogModal(parseInt(pid, 10));
+        });
+        grid.addEventListener('keyup', function (e) {
+          if (e.key !== ' ') return;
+          var el = document.activeElement;
+          var pid = el && el.getAttribute && el.getAttribute('data-post-id');
+          if (pid) openBlogModal(parseInt(pid, 10));
+        });
+      }
+
+      /* Modal close controls — guarded to avoid duplicate listeners */
+      var modal    = document.getElementById('blog-modal');
+      var closeBtn = document.getElementById('blog-modal-close');
+      var backdrop = document.getElementById('blog-modal-backdrop');
+      if (modal && !modal.dataset.closeInited) {
+        modal.dataset.closeInited = '1';
+        if (closeBtn) closeBtn.addEventListener('click', closeBlogModal);
+        if (backdrop) backdrop.addEventListener('click', closeBlogModal);
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeBlogModal();
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
 </body>
 </html>
