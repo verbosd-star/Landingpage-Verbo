@@ -119,11 +119,11 @@
   };
 
   var DEFAULT_POSTS = [
-    { id: 1, tag: 'Branding',     title: 'Identidad de Marca Completa',  text: 'Rediseño integral de identidad visual, sistema de marca y comunicación para empresa de tecnología.',                image: '' },
-    { id: 2, tag: 'Social Media', title: 'Campaña 360°',                 text: 'Estrategia y ejecución multicanal que triplicó el engagement en 3 meses.',                                          image: '' },
-    { id: 3, tag: 'Contenido',    title: 'Producción Audiovisual',        text: 'Serie de videos institucionales y reels que posicionaron la marca en el top de su categoría.',                      image: '' },
-    { id: 4, tag: 'Publicidad',   title: 'Campaña Meta Ads',             text: 'ROAS de 4.5x con estrategia de segmentación avanzada y creativos de alto impacto.',                                 image: '' },
-    { id: 5, tag: 'Estrategia',   title: 'Plan Anual de Comunicación',   text: 'Hoja de ruta completa de contenidos y campañas para marca de consumo masivo.',                                      image: '' }
+    { id: 1, tag: 'Branding',     title: 'Identidad de Marca Completa',  text: 'Rediseño integral de identidad visual, sistema de marca y comunicación para empresa de tecnología.',           body: 'El proyecto comenzó con un diagnóstico profundo de la marca existente. Identificamos sus fortalezas, debilidades y oportunidades en el mercado.\n\nDiseñamos un nuevo sistema visual coherente: logotipo, paleta de colores, tipografías y aplicaciones. Cada elemento fue creado para comunicar innovación y confianza.\n\nEl resultado fue una identidad que unificó todas las comunicaciones de la empresa y fortaleció su posición en el sector tecnológico.',                               date: '2024-03-10', image: '' },
+    { id: 2, tag: 'Social Media', title: 'Campaña 360°',                 text: 'Estrategia y ejecución multicanal que triplicó el engagement en 3 meses.',                                    body: 'Desarrollamos una estrategia 360° integrando Instagram, Facebook, LinkedIn y TikTok con un calendario editorial unificado.\n\nCreamos contenido nativo para cada plataforma, adaptando el mensaje sin perder la coherencia de marca. Combinamos publicaciones orgánicas con campañas pagadas segmentadas.\n\nEn 90 días el engagement aumentó un 312%, los seguidores crecieron un 85% y las consultas directas se triplicaron.',                                date: '2024-01-22', image: '' },
+    { id: 3, tag: 'Contenido',    title: 'Producción Audiovisual',        text: 'Serie de videos institucionales y reels que posicionaron la marca en el top de su categoría.',               body: 'La marca necesitaba contenido audiovisual que conectara emocionalmente con su audiencia y diferenciara sus servicios.\n\nProducimos una serie de 12 videos institucionales y 30 reels optimizados para redes sociales. Cada pieza contó con guion, dirección de arte, filmación y postproducción profesional.\n\nLos videos alcanzaron más de 2 millones de visualizaciones orgánicas en el primer mes, posicionando la marca como referente en su categoría.',     date: '2023-11-15', image: '' },
+    { id: 4, tag: 'Publicidad',   title: 'Campaña Meta Ads',             text: 'ROAS de 4.5x con estrategia de segmentación avanzada y creativos de alto impacto.',                           body: 'El cliente buscaba maximizar el retorno de su inversión publicitaria en Meta (Facebook e Instagram) para su línea de productos premium.\n\nDiseñamos una estrategia de segmentación por capas: audiencias frías con contenido educativo, retargeting de interesados y audiencias similares de compradores. Creamos sets de creativos con pruebas A/B sistemáticas.\n\nLogramos un ROAS promedio de 4.5x durante 3 meses consecutivos, con un costo por adquisición 40% menor al benchmark del sector.',                    date: '2023-09-05', image: '' },
+    { id: 5, tag: 'Estrategia',   title: 'Plan Anual de Comunicación',   text: 'Hoja de ruta completa de contenidos y campañas para marca de consumo masivo.',                               body: 'Desarrollamos el plan de comunicación anual para una marca de consumo masivo con presencia en tres países.\n\nEl plan incluyó: auditoría de comunicaciones, definición de pilares de contenido, calendario editorial de 52 semanas, planificación de campañas estacionales y presupuesto por canal.\n\nLa ejecución del plan resultó en un crecimiento del 67% en reconocimiento de marca y un aumento del 43% en ventas atribuibles a acciones de marketing.',     date: '2023-07-01', image: '' }
   ];
 
   // ─── Auth Guard ──────────────────────────────────────────────────────────────
@@ -651,7 +651,9 @@
   var addPostBtn   = document.getElementById('add-post-btn');
   var newPostTag   = document.getElementById('new-post-tag');
   var newPostTitle = document.getElementById('new-post-title');
+  var newPostDate  = document.getElementById('new-post-date');
   var newPostText  = document.getElementById('new-post-text');
+  var newPostBody  = document.getElementById('new-post-body');
   var newPostImage = document.getElementById('new-post-image');
   var newPostPreview    = document.getElementById('new-post-preview');
   var newPostPreviewImg = document.getElementById('new-post-preview-img');
@@ -675,7 +677,7 @@
         thumb +
         '<div style="flex:1;min-width:0;">' +
         '<p style="font-size:0.82rem;font-weight:600;color:var(--admin-text);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(p.title) + '</p>' +
-        '<p style="font-size:0.75rem;color:var(--admin-text-muted);margin:2px 0 0;">' + escHtml(p.tag) + '</p>' +
+        '<p style="font-size:0.75rem;color:var(--admin-text-muted);margin:2px 0 0;">' + escHtml(p.tag) + (p.date ? ' · ' + escHtml(p.date) : '') + '</p>' +
         '</div>' +
         '<button class="btn btn-danger btn-sm" data-delete-post="' + p.id + '" style="flex-shrink:0;">' +
         '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
@@ -728,18 +730,30 @@
     addPostBtn.addEventListener('click', function () {
       var tag   = newPostTag   ? newPostTag.value.trim()   : '';
       var title = newPostTitle ? newPostTitle.value.trim() : '';
+      var date  = newPostDate  ? newPostDate.value.trim()  : '';
       var text  = newPostText  ? newPostText.value.trim()  : '';
+      var body  = newPostBody  ? newPostBody.value.trim()  : '';
       if (!title) {
         showToast('El título es obligatorio', 'error');
         return;
       }
       var posts = loadPosts();
-      posts.push({ id: nextPostId(posts), tag: tag, title: title, text: text, image: pendingPostImage });
+      posts.push({
+        id:    nextPostId(posts),
+        tag:   tag,
+        title: title,
+        date:  date,
+        text:  text,
+        body:  body,
+        image: pendingPostImage
+      });
       savePosts(posts);
       renderPostsList();
       if (newPostTag)   newPostTag.value   = '';
       if (newPostTitle) newPostTitle.value = '';
+      if (newPostDate)  newPostDate.value  = '';
       if (newPostText)  newPostText.value  = '';
+      if (newPostBody)  newPostBody.value  = '';
       if (newPostImage) newPostImage.value = '';
       pendingPostImage = '';
       if (newPostPreview) newPostPreview.style.display = 'none';

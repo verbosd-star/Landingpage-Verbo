@@ -566,13 +566,23 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Descripción</label>
-                  <textarea id="new-post-text" class="form-textarea" placeholder="Descripción breve del proyecto…"></textarea>
+                  <label class="form-label">Fecha de publicación</label>
+                  <input type="date" id="new-post-date" class="form-input" />
+                  <p class="form-hint">Se mostrará en la tarjeta del blog</p>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Extracto / Resumen</label>
+                  <textarea id="new-post-text" class="form-textarea" placeholder="Descripción breve que aparece en la tarjeta…"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Contenido completo del artículo</label>
+                  <textarea id="new-post-body" class="form-textarea" style="min-height:160px;" placeholder="Escribe el contenido completo del caso de éxito. Usa saltos de línea para separar párrafos."></textarea>
+                  <p class="form-hint">Este texto aparece al abrir el artículo completo</p>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Imagen</label>
                   <input type="file" id="new-post-image" class="form-input" accept="image/*" style="padding:0.4rem;" />
-                  <p class="form-hint">Sube una imagen para el proyecto (JPG, PNG, WebP). Si no subes imagen se usará un color de fondo.</p>
+                  <p class="form-hint">Sube una imagen de portada (JPG, PNG, WebP, máx. 2 MB). Si no subes imagen se usará un color de fondo.</p>
                   <div id="new-post-preview" style="margin-top:0.5rem;display:none;">
                     <img id="new-post-preview-img" src="" alt="Vista previa" style="max-height:140px;border-radius:8px;object-fit:cover;width:100%;" />
                   </div>
