@@ -38,6 +38,51 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/styles.css" />
 
+  <!-- Blog / Portfolio card + modal styles — inlined so they are always
+       present regardless of which version of styles.css the server serves -->
+  <style>
+    /* ── Blog grid ─────────────────────────────────── */
+    .blog__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;align-items:start}
+    /* ── Blog card ─────────────────────────────────── */
+    .blog-card{background:var(--color-dark-3,#1e1e1e);border-radius:var(--radius-lg,16px);overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.06);transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease;cursor:pointer}
+    .blog-card:hover{transform:translateY(-6px);box-shadow:0 20px 56px rgba(0,0,0,.45);border-color:rgba(255,255,255,.12)}
+    .blog-card__img-wrap{height:220px;overflow:hidden;flex-shrink:0}
+    .blog-card__img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+    .blog-card__img--gradient{height:100%}
+    .blog-card:hover .blog-card__img{transform:scale(1.05)}
+    .blog-card__body{padding:24px;flex:1;display:flex;flex-direction:column}
+    .blog-card__meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+    .blog-card__tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--color-primary,#FF3B00);color:#fff;padding:3px 10px;border-radius:999px}
+    .blog-card__date{font-size:.78rem;color:var(--text-muted,#888)}
+    .blog-card__title{font-size:clamp(1rem,1.4vw,1.15rem);font-weight:700;color:var(--color-white,#fff);line-height:1.3;margin-bottom:10px}
+    .blog-card__excerpt{font-size:.85rem;color:var(--text-secondary,#aaa);line-height:1.6;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:18px}
+    .blog-card__readmore{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--color-primary,#FF3B00);background:none;border:none;padding:0;cursor:pointer;transition:gap .2s ease,color .2s ease;margin-top:auto;font-family:inherit}
+    .blog-card__readmore:hover{color:var(--color-primary-light,#ff6b3d);gap:10px}
+    .blog-empty{text-align:center;color:var(--text-muted,#888);font-size:1rem;padding:3rem 0;grid-column:1/-1}
+    /* ── Blog modal ─────────────────────────────────── */
+    .blog-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:clamp(12px,3vw,40px);opacity:0;pointer-events:none;transition:opacity .3s ease}
+    .blog-modal.is-open{opacity:1;pointer-events:all}
+    .blog-modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+    .blog-modal__container{position:relative;background:var(--color-dark-2,#161616);border-radius:var(--radius-lg,16px);max-width:800px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.65);transform:translateY(20px);transition:transform .3s ease;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
+    .blog-modal__container::-webkit-scrollbar{width:4px}
+    .blog-modal__container::-webkit-scrollbar-track{background:transparent}
+    .blog-modal__container::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+    .blog-modal.is-open .blog-modal__container{transform:translateY(0)}
+    .blog-modal__close{position:sticky;top:14px;float:right;margin:14px 14px -46px 0;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease;z-index:2;flex-shrink:0}
+    .blog-modal__close:hover{background:rgba(255,255,255,.22)}
+    .blog-modal__img-wrap{width:100%;height:340px;overflow:hidden;flex-shrink:0}
+    .blog-modal__img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+    .blog-modal__content{padding:clamp(20px,4vw,40px)}
+    .blog-modal__meta{display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap}
+    .blog-modal__title{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:var(--color-white,#fff);line-height:1.2;margin-bottom:1.5rem}
+    .blog-modal__body{font-size:.97rem;color:var(--text-secondary,#aaa);line-height:1.85}
+    .blog-modal__body p{margin-bottom:1.1rem}
+    .blog-modal__body p:last-child{margin-bottom:0}
+    /* ── Responsive ─────────────────────────────────── */
+    @media(max-width:1024px){.blog__grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:768px){.blog__grid{grid-template-columns:1fr}}
+  </style>
+
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
