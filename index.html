@@ -1034,6 +1034,15 @@
     }
 
     function init() {
+      /* Apply the about section image URL saved by the admin panel */
+      try {
+        var c = JSON.parse(localStorage.getItem('verbo_content') || 'null');
+        if (c && c.about && c.about.logoUrl) {
+          var aboutImg = document.querySelector('[data-about-logo]');
+          if (aboutImg) aboutImg.src = c.about.logoUrl;
+        }
+      } catch (e) { /* ignore */ }
+
       /* Event delegation on the grid — handles both the static fallback cards
          already in the HTML and any cards dynamically inserted by content.js */
       var grid = document.getElementById('portfolio-posts-grid');

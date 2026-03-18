@@ -431,6 +431,29 @@
                 </div>
               </div>
             </div>
+
+            <!-- About Image Manager -->
+            <div class="card" style="margin-top:1.25rem;">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Imagen — Sección Quiénes Somos</p>
+                  <p class="card-subtitle">Foto o imagen visual que aparece junto al texto "Quiénes Somos"</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">URL de la imagen</label>
+                <input type="text" id="about-logo-url" class="form-input" placeholder="https://… o deja en blanco para imagen predeterminada" />
+                <p class="form-hint">Puedes pegar una URL de imagen o usar el cargador de archivo abajo</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Subir imagen</label>
+                <input type="file" id="about-logo-file" class="form-input" accept="image/*" style="padding:0.4rem;" />
+                <div id="about-logo-preview" style="margin-top:0.5rem;display:none;">
+                  <img id="about-logo-preview-img" src="" alt="Vista previa" style="max-height:200px;border-radius:8px;object-fit:contain;background:#111;padding:1rem;width:100%;" />
+                </div>
+              </div>
+              <button class="btn btn-success btn-sm" id="save-about-logo-btn">Guardar imagen</button>
+            </div>
           </div>
 
           <!-- ── Process ── -->
@@ -592,29 +615,6 @@
                   Agregar Publicación
                 </button>
               </div>
-            </div>
-
-            <!-- About Logo Manager -->
-            <div class="card" style="margin-top:1.25rem;">
-              <div class="card-header">
-                <div>
-                  <p class="card-title">Logo — Sección Quiénes Somos</p>
-                  <p class="card-subtitle">Imagen que aparece en la sección "Quiénes Somos"</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">URL de la imagen</label>
-                <input type="text" id="about-logo-url" class="form-input" placeholder="https://… o deja en blanco para imagen predeterminada" />
-                <p class="form-hint">Puedes pegar una URL de imagen o usar el cargador de archivo abajo</p>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Subir imagen</label>
-                <input type="file" id="about-logo-file" class="form-input" accept="image/*" style="padding:0.4rem;" />
-                <div id="about-logo-preview" style="margin-top:0.5rem;display:none;">
-                  <img id="about-logo-preview-img" src="" alt="Vista previa" style="max-height:200px;border-radius:8px;object-fit:contain;background:#111;padding:1rem;width:100%;" />
-                </div>
-              </div>
-              <button class="btn btn-success btn-sm" id="save-about-logo-btn">Guardar logo</button>
             </div>
           </div>
 
