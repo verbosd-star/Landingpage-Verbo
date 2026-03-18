@@ -38,6 +38,51 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/styles.css" />
 
+  <!-- Blog / Portfolio card + modal styles — inlined so they are always
+       present regardless of which version of styles.css the server serves -->
+  <style>
+    /* ── Blog grid ─────────────────────────────────── */
+    .blog__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;align-items:start}
+    /* ── Blog card ─────────────────────────────────── */
+    .blog-card{background:var(--color-dark-3,#1e1e1e);border-radius:var(--radius-lg,16px);overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.06);transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease;cursor:pointer}
+    .blog-card:hover{transform:translateY(-6px);box-shadow:0 20px 56px rgba(0,0,0,.45);border-color:rgba(255,255,255,.12)}
+    .blog-card__img-wrap{height:220px;overflow:hidden;flex-shrink:0}
+    .blog-card__img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+    .blog-card__img--gradient{height:100%}
+    .blog-card:hover .blog-card__img{transform:scale(1.05)}
+    .blog-card__body{padding:24px;flex:1;display:flex;flex-direction:column}
+    .blog-card__meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+    .blog-card__tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--color-primary,#FF3B00);color:#fff;padding:3px 10px;border-radius:999px}
+    .blog-card__date{font-size:.78rem;color:var(--text-muted,#888)}
+    .blog-card__title{font-size:clamp(1rem,1.4vw,1.15rem);font-weight:700;color:var(--color-white,#fff);line-height:1.3;margin-bottom:10px}
+    .blog-card__excerpt{font-size:.85rem;color:var(--text-secondary,#aaa);line-height:1.6;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:18px}
+    .blog-card__readmore{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--color-primary,#FF3B00);background:none;border:none;padding:0;cursor:pointer;transition:gap .2s ease,color .2s ease;margin-top:auto;font-family:inherit}
+    .blog-card__readmore:hover{color:var(--color-primary-light,#ff6b3d);gap:10px}
+    .blog-empty{text-align:center;color:var(--text-muted,#888);font-size:1rem;padding:3rem 0;grid-column:1/-1}
+    /* ── Blog modal ─────────────────────────────────── */
+    .blog-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:clamp(12px,3vw,40px);opacity:0;pointer-events:none;transition:opacity .3s ease}
+    .blog-modal.is-open{opacity:1;pointer-events:all}
+    .blog-modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+    .blog-modal__container{position:relative;background:var(--color-dark-2,#161616);border-radius:var(--radius-lg,16px);max-width:800px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.65);transform:translateY(20px);transition:transform .3s ease;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
+    .blog-modal__container::-webkit-scrollbar{width:4px}
+    .blog-modal__container::-webkit-scrollbar-track{background:transparent}
+    .blog-modal__container::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+    .blog-modal.is-open .blog-modal__container{transform:translateY(0)}
+    .blog-modal__close{position:sticky;top:14px;float:right;margin:14px 14px -46px 0;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease;z-index:2;flex-shrink:0}
+    .blog-modal__close:hover{background:rgba(255,255,255,.22)}
+    .blog-modal__img-wrap{width:100%;height:340px;overflow:hidden;flex-shrink:0}
+    .blog-modal__img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+    .blog-modal__content{padding:clamp(20px,4vw,40px)}
+    .blog-modal__meta{display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap}
+    .blog-modal__title{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:var(--color-white,#fff);line-height:1.2;margin-bottom:1.5rem}
+    .blog-modal__body{font-size:.97rem;color:var(--text-secondary,#aaa);line-height:1.85}
+    .blog-modal__body p{margin-bottom:1.1rem}
+    .blog-modal__body p:last-child{margin-bottom:0}
+    /* ── Responsive ─────────────────────────────────── */
+    @media(max-width:1024px){.blog__grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:768px){.blog__grid{grid-template-columns:1fr}}
+  </style>
+
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
@@ -453,6 +498,19 @@
             <span class="service-card__number">11</span>
           </article>
 
+          <article class="service-card" data-index="12">
+            <div class="service-card__icon">
+              <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M8 14 H34 C36 14 38 16 38 18 V30 C38 32 36 34 34 34 H22 L12 42 V34 H8 C6 34 4 32 4 30 V18 C4 16 6 14 8 14 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 22 H30 M12 28 H22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <h3 class="service-card__title">Relaciones Públicas</h3>
+            <p class="service-card__text">Ofrecemos un servicio integral de relaciones públicas que abarca la estrategia de comunicación, redacción de notas de prensa y comunicados, gestión de medios e entrevistas, cobertura y difusión de eventos, manejo de imagen y reputación, asesoría en comunicación institucional, desarrollo de mensajes clave y vocería, así como la vinculación con aliados y públicos estratégicos, con el objetivo de fortalecer la presencia, credibilidad y posicionamiento de cada marca.</p>
+            <a class="service-card__whatsapp" href="https://wa.me/18099136191?text=Hola%2C%20me%20interesa%20cotizar%20el%20servicio%20de%20Relaciones%20P%C3%BAblicas" target="_blank" rel="noopener noreferrer" aria-label="Cotizar Relaciones Públicas por WhatsApp">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Cotizar por WhatsApp
+            </a>
+            <span class="service-card__number">12</span>
+          </article>
+
         </div>
 
       </div>
@@ -463,7 +521,7 @@
       <div class="container about__inner">
         <div class="about__visual">
           <div class="about__img-wrapper">
-            <img src="img/Logo Verbo-04.png" alt="Verbo Taller equipo creativo" class="about__img" width="500" height="500" loading="lazy" />
+            <img src="https://github.com/user-attachments/assets/07c159a6-97ed-4f11-8033-664cf2b51524" alt="Verbo Taller equipo creativo" class="about__img" id="about-logo-img" width="500" height="500" loading="lazy" data-about-logo />
             <div class="about__accent-box">
               <span class="about__accent-number" data-editable="about.accentNumber">10+</span>
               <span class="about__accent-text" data-editable="about.accentText">Años transformando marcas</span>
@@ -553,53 +611,78 @@
           <h2 class="section-title" id="portfolio-title" data-editable="portfolio.title">Casos de Éxito</h2>
           <p class="section-subtitle" data-editable="portfolio.subtitle">Proyectos que demuestran que la creatividad + estrategia = resultados.</p>
         </div>
-        <div class="portfolio__grid">
-
-          <article class="portfolio-card portfolio-card--wide">
-            <div class="portfolio-card__img portfolio-card__img--1" role="img" aria-label="Proyecto de branding completo"></div>
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag">Branding</span>
-              <h3 class="portfolio-card__title">Identidad de Marca Completa</h3>
-              <p class="portfolio-card__text">Rediseño integral de identidad visual, sistema de marca y comunicación para empresa de tecnología.</p>
+        <div class="blog__grid" id="portfolio-posts-grid">
+          <!-- Default cards — replaced dynamically by js/content.js when available -->
+          <article class="blog-card" data-post-id="1" tabindex="0" role="button" aria-label="Leer más sobre Identidad de Marca Completa">
+            <div class="blog-card__img-wrap">
+              <div class="blog-card__img blog-card__img--gradient" style="background:linear-gradient(135deg,#1a0a00 0%,#FF3B00 60%,#FFB800 100%)"></div>
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <span class="blog-card__tag">Branding</span>
+                <span class="blog-card__date">10 de marzo de 2024</span>
+              </div>
+              <h3 class="blog-card__title">Identidad de Marca Completa</h3>
+              <p class="blog-card__excerpt">Rediseño integral de identidad visual, sistema de marca y comunicación para empresa de tecnología.</p>
+              <button class="blog-card__readmore" tabindex="-1" aria-hidden="true">Leer más <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="12 5 19 12 12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
             </div>
           </article>
-
-          <article class="portfolio-card">
-            <div class="portfolio-card__img portfolio-card__img--2" role="img" aria-label="Campaña social media"></div>
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag">Social Media</span>
-              <h3 class="portfolio-card__title">Campaña 360°</h3>
-              <p class="portfolio-card__text">Estrategia y ejecución multicanal que triplicó el engagement en 3 meses.</p>
+          <article class="blog-card" data-post-id="2" tabindex="0" role="button" aria-label="Leer más sobre Campaña 360°">
+            <div class="blog-card__img-wrap">
+              <div class="blog-card__img blog-card__img--gradient" style="background:linear-gradient(135deg,#000a1a 0%,#0047FF 100%)"></div>
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <span class="blog-card__tag">Social Media</span>
+                <span class="blog-card__date">22 de enero de 2024</span>
+              </div>
+              <h3 class="blog-card__title">Campaña 360°</h3>
+              <p class="blog-card__excerpt">Estrategia y ejecución multicanal que triplicó el engagement en 3 meses.</p>
+              <button class="blog-card__readmore" tabindex="-1" aria-hidden="true">Leer más <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="12 5 19 12 12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
             </div>
           </article>
-
-          <article class="portfolio-card">
-            <div class="portfolio-card__img portfolio-card__img--3" role="img" aria-label="Producción de contenido audiovisual"></div>
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag">Contenido</span>
-              <h3 class="portfolio-card__title">Producción Audiovisual</h3>
-              <p class="portfolio-card__text">Serie de videos institucionales y reels que posicionaron la marca en el top de su categoría.</p>
+          <article class="blog-card" data-post-id="3" tabindex="0" role="button" aria-label="Leer más sobre Producción Audiovisual">
+            <div class="blog-card__img-wrap">
+              <div class="blog-card__img blog-card__img--gradient" style="background:linear-gradient(135deg,#0a001a 0%,#8B00FF 100%)"></div>
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <span class="blog-card__tag">Contenido</span>
+                <span class="blog-card__date">15 de noviembre de 2023</span>
+              </div>
+              <h3 class="blog-card__title">Producción Audiovisual</h3>
+              <p class="blog-card__excerpt">Serie de videos institucionales y reels que posicionaron la marca en el top de su categoría.</p>
+              <button class="blog-card__readmore" tabindex="-1" aria-hidden="true">Leer más <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="12 5 19 12 12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
             </div>
           </article>
-
-          <article class="portfolio-card">
-            <div class="portfolio-card__img portfolio-card__img--4" role="img" aria-label="Publicidad digital"></div>
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag">Publicidad</span>
-              <h3 class="portfolio-card__title">Campaña Meta Ads</h3>
-              <p class="portfolio-card__text">ROAS de 4.5x con estrategia de segmentación avanzada y creativos de alto impacto.</p>
+          <article class="blog-card" data-post-id="4" tabindex="0" role="button" aria-label="Leer más sobre Campaña Meta Ads">
+            <div class="blog-card__img-wrap">
+              <div class="blog-card__img blog-card__img--gradient" style="background:linear-gradient(135deg,#001a0a 0%,#00A651 100%)"></div>
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <span class="blog-card__tag">Publicidad</span>
+                <span class="blog-card__date">5 de septiembre de 2023</span>
+              </div>
+              <h3 class="blog-card__title">Campaña Meta Ads</h3>
+              <p class="blog-card__excerpt">ROAS de 4.5x con estrategia de segmentación avanzada y creativos de alto impacto.</p>
+              <button class="blog-card__readmore" tabindex="-1" aria-hidden="true">Leer más <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="12 5 19 12 12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
             </div>
           </article>
-
-          <article class="portfolio-card portfolio-card--tall">
-            <div class="portfolio-card__img portfolio-card__img--5" role="img" aria-label="Estrategia de contenidos"></div>
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag">Estrategia</span>
-              <h3 class="portfolio-card__title">Plan Anual de Comunicación</h3>
-              <p class="portfolio-card__text">Hoja de ruta completa de contenidos y campañas para marca de consumo masivo.</p>
+          <article class="blog-card" data-post-id="5" tabindex="0" role="button" aria-label="Leer más sobre Plan Anual de Comunicación">
+            <div class="blog-card__img-wrap">
+              <div class="blog-card__img blog-card__img--gradient" style="background:linear-gradient(135deg,#1a1000 0%,#FFB800 100%)"></div>
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <span class="blog-card__tag">Estrategia</span>
+                <span class="blog-card__date">1 de julio de 2023</span>
+              </div>
+              <h3 class="blog-card__title">Plan Anual de Comunicación</h3>
+              <p class="blog-card__excerpt">Hoja de ruta completa de contenidos y campañas para marca de consumo masivo.</p>
+              <button class="blog-card__readmore" tabindex="-1" aria-hidden="true">Leer más <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="12 5 19 12 12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
             </div>
           </article>
-
         </div>
       </div>
     </section>
@@ -827,7 +910,188 @@
     <svg viewBox="0 0 24 24" fill="none" width="20" height="20" aria-hidden="true"><polyline points="18 15 12 9 6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
 
+  <!-- ===== BLOG POST MODAL ===== -->
+  <div class="blog-modal" id="blog-modal" role="dialog" aria-modal="true" aria-labelledby="blog-modal-title" aria-hidden="true">
+    <div class="blog-modal__backdrop" id="blog-modal-backdrop"></div>
+    <div class="blog-modal__container" role="document">
+      <button class="blog-modal__close" id="blog-modal-close" aria-label="Cerrar publicación">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="blog-modal__img-wrap" id="blog-modal-img-wrap">
+        <img id="blog-modal-img" src="" alt="" />
+      </div>
+      <div class="blog-modal__content">
+        <div class="blog-modal__meta">
+          <span class="blog-card__tag" id="blog-modal-tag"></span>
+          <span class="blog-card__date" id="blog-modal-date"></span>
+        </div>
+        <h2 class="blog-modal__title" id="blog-modal-title"></h2>
+        <div class="blog-modal__body" id="blog-modal-body"></div>
+      </div>
+    </div>
+  </div>
+
   <script src="js/content.js"></script>
   <script src="js/main.js"></script>
+
+  <!-- Portfolio card click + modal JS — inlined so interactions always work
+       regardless of which version of content.js the server serves.
+       Uses event delegation so it handles both static fallback cards and
+       any cards dynamically inserted by content.js. -->
+  <script>
+  (function () {
+    'use strict';
+
+    var POSTS_KEY = 'verbo_portfolio_posts';
+
+    var DEFAULT_POSTS = [
+      { id: 1, tag: 'Branding',     title: 'Identidad de Marca Completa',  text: 'Rediseño integral de identidad visual, sistema de marca y comunicación para empresa de tecnología.',           body: 'El proyecto comenzó con un diagnóstico profundo de la marca existente. Identificamos sus fortalezas, debilidades y oportunidades en el mercado.\n\nDiseñamos un nuevo sistema visual coherente: logotipo, paleta de colores, tipografías y aplicaciones. Cada elemento fue creado para comunicar innovación y confianza.\n\nEl resultado fue una identidad que unificó todas las comunicaciones de la empresa y fortaleció su posición en el sector tecnológico.',                               date: '2024-03-10', image: '' },
+      { id: 2, tag: 'Social Media', title: 'Campaña 360°',                 text: 'Estrategia y ejecución multicanal que triplicó el engagement en 3 meses.',                                    body: 'Desarrollamos una estrategia 360° integrando Instagram, Facebook, LinkedIn y TikTok con un calendario editorial unificado.\n\nCreamos contenido nativo para cada plataforma, adaptando el mensaje sin perder la coherencia de marca. Combinamos publicaciones orgánicas con campañas pagadas segmentadas.\n\nEn 90 días el engagement aumentó un 312%, los seguidores crecieron un 85% y las consultas directas se triplicaron.',                                date: '2024-01-22', image: '' },
+      { id: 3, tag: 'Contenido',    title: 'Producción Audiovisual',        text: 'Serie de videos institucionales y reels que posicionaron la marca en el top de su categoría.',               body: 'La marca necesitaba contenido audiovisual que conectara emocionalmente con su audiencia y diferenciara sus servicios.\n\nProducimos una serie de 12 videos institucionales y 30 reels optimizados para redes sociales. Cada pieza contó con guion, dirección de arte, filmación y postproducción profesional.\n\nLos videos alcanzaron más de 2 millones de visualizaciones orgánicas en el primer mes, posicionando la marca como referente en su categoría.',     date: '2023-11-15', image: '' },
+      { id: 4, tag: 'Publicidad',   title: 'Campaña Meta Ads',             text: 'ROAS de 4.5x con estrategia de segmentación avanzada y creativos de alto impacto.',                           body: 'El cliente buscaba maximizar el retorno de su inversión publicitaria en Meta (Facebook e Instagram) para su línea de productos premium.\n\nDiseñamos una estrategia de segmentación por capas: audiencias frías con contenido educativo, retargeting de interesados y audiencias similares de compradores. Creamos sets de creativos con pruebas A/B sistemáticas.\n\nLogramos un ROAS promedio de 4.5x durante 3 meses consecutivos, con un costo por adquisición 40% menor al benchmark del sector.',                    date: '2023-09-05', image: '' },
+      { id: 5, tag: 'Estrategia',   title: 'Plan Anual de Comunicación',   text: 'Hoja de ruta completa de contenidos y campañas para marca de consumo masivo.',                               body: 'Desarrollamos el plan de comunicación anual para una marca de consumo masivo con presencia en tres países.\n\nEl plan incluyó: auditoría de comunicaciones, definición de pilares de contenido, calendario editorial de 52 semanas, planificación de campañas estacionales y presupuesto por canal.\n\nLa ejecución del plan resultó en un crecimiento del 67% en reconocimiento de marca y un aumento del 43% en ventas atribuibles a acciones de marketing.',     date: '2023-07-01', image: '' }
+    ];
+
+    function escHtml(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        var p = dateStr.split('-');
+        if (p.length !== 3) return dateStr;
+        var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+        if (isNaN(d.getTime())) return dateStr;
+        return d.toLocaleDateString('es-DO', { year: 'numeric', month: 'long', day: 'numeric' });
+      } catch (e) { return dateStr; }
+    }
+
+    function getPosts() {
+      try {
+        var raw = localStorage.getItem(POSTS_KEY);
+        if (!raw) return DEFAULT_POSTS;
+        var parsed = JSON.parse(raw);
+        return (Array.isArray(parsed) && parsed.length > 0) ? parsed : DEFAULT_POSTS;
+      } catch (e) { return DEFAULT_POSTS; }
+    }
+
+    function closeBlogModal() {
+      var modal = document.getElementById('blog-modal');
+      if (!modal) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function openBlogModal(id) {
+      var posts = getPosts();
+      var post = null;
+      for (var i = 0; i < posts.length; i++) {
+        if (parseInt(posts[i].id, 10) === parseInt(id, 10)) { post = posts[i]; break; }
+      }
+      if (!post) return;
+
+      var modal        = document.getElementById('blog-modal');
+      var modalTag     = document.getElementById('blog-modal-tag');
+      var modalDate    = document.getElementById('blog-modal-date');
+      var modalTitle   = document.getElementById('blog-modal-title');
+      var modalImg     = document.getElementById('blog-modal-img');
+      var modalImgWrap = document.getElementById('blog-modal-img-wrap');
+      var modalBody    = document.getElementById('blog-modal-body');
+      if (!modal) return;
+
+      if (modalTag)   modalTag.textContent   = post.tag   || '';
+      if (modalDate)  modalDate.textContent  = post.date  ? formatDate(post.date) : '';
+      if (modalTitle) modalTitle.textContent = post.title || '';
+
+      if (post.image) {
+        if (modalImg)     { modalImg.src = post.image; modalImg.alt = post.title || ''; }
+        if (modalImgWrap) modalImgWrap.style.display = '';
+      } else {
+        if (modalImgWrap) modalImgWrap.style.display = 'none';
+      }
+
+      if (modalBody) {
+        var raw        = post.body || post.text || '';
+        var paragraphs = raw.split(/\n+/);
+        var bodyHtml   = '';
+        for (var p = 0; p < paragraphs.length; p++) {
+          var para = paragraphs[p].trim();
+          if (para) bodyHtml += '<p>' + escHtml(para) + '</p>';
+        }
+        modalBody.innerHTML = bodyHtml || '<p>' + escHtml(post.text || '') + '</p>';
+      }
+
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function init() {
+      /* Apply the about section image URL saved by the admin panel */
+      try {
+        var c = JSON.parse(localStorage.getItem('verbo_content') || 'null');
+        if (c && c.about && c.about.logoUrl) {
+          var aboutImg = document.querySelector('[data-about-logo]');
+          if (aboutImg) aboutImg.src = c.about.logoUrl;
+        }
+      } catch (e) { /* ignore */ }
+
+      /* Event delegation on the grid — handles both the static fallback cards
+         already in the HTML and any cards dynamically inserted by content.js */
+      var grid = document.getElementById('portfolio-posts-grid');
+      if (grid && !grid.dataset.clickInited) {
+        grid.dataset.clickInited = '1';
+        grid.addEventListener('click', function (e) {
+          var el = e.target;
+          while (el && el !== grid) {
+            var pid = el.getAttribute && el.getAttribute('data-post-id');
+            if (pid) { openBlogModal(parseInt(pid, 10)); return; }
+            el = el.parentNode;
+          }
+        });
+        grid.addEventListener('keydown', function (e) {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          var el = document.activeElement;
+          var pid = el && el.getAttribute && el.getAttribute('data-post-id');
+          if (!pid) return;
+          e.preventDefault();
+          if (e.key === 'Enter') openBlogModal(parseInt(pid, 10));
+        });
+        grid.addEventListener('keyup', function (e) {
+          if (e.key !== ' ') return;
+          var el = document.activeElement;
+          var pid = el && el.getAttribute && el.getAttribute('data-post-id');
+          if (pid) openBlogModal(parseInt(pid, 10));
+        });
+      }
+
+      /* Modal close controls — guarded to avoid duplicate listeners */
+      var modal    = document.getElementById('blog-modal');
+      var closeBtn = document.getElementById('blog-modal-close');
+      var backdrop = document.getElementById('blog-modal-backdrop');
+      if (modal && !modal.dataset.closeInited) {
+        modal.dataset.closeInited = '1';
+        if (closeBtn) closeBtn.addEventListener('click', closeBlogModal);
+        if (backdrop) backdrop.addEventListener('click', closeBlogModal);
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeBlogModal();
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
 </body>
 </html>
